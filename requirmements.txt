@@ -1,0 +1,18 @@
+# requirements.txt
+
+# Web Framework
+Flask==2.3.3
+Werkzeug==2.3.7
+
+# Computer Vision & Image Processing
+opencv-python==4.8.1.78
+mediapipe==0.10.7
+
+# Numerical Operations
+numpy==1.24.3
+
+# GUI Automation (for game control)
+PyAutoGUI==0.9.54
+
+# Additional Dependencies
+Pillow==10.0.1

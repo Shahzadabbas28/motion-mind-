@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Motion Mind - AI Gesture Control</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div id="app">
+    <!-- Navigation -->
+    <nav class="navbar" role="navigation" aria-label="Main Navigation">
+      <div class="logo"><i class="fas fa-brain"></i> Motion Mind</div>
+      <ul class="nav-links">
+        <li><a href="#" data-screen="dashboard" class="nav-link" tabindex="0"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+        <li><a href="#" data-screen="whiteboard" class="nav-link" tabindex="0"><i class="fas fa-chalkboard"></i> Whiteboard</a></li>
+        <li><a href="#" data-screen="games" class="nav-link" tabindex="0"><i class="fas fa-gamepad"></i> Games</a></li>
+        <li><a href="#" data-screen="presentation" class="nav-link" tabindex="0"><i class="fas fa-file-powerpoint"></i> Presentation</a></li>
+        <li><a href="#" data-screen="settings" class="nav-link" tabindex="0"><i class="fas fa-cog"></i> Settings</a></li>
+        <li><a href="#" data-screen="profile" class="nav-link" tabindex="0"><i class="fas fa-user"></i> Profile</a></li>
+        <li><a href="#" data-screen="help" class="nav-link" tabindex="0"><i class="fas fa-question-circle"></i> Help</a></li>
+        <li><a href="#" id="logoutBtn" class="nav-link" tabindex="0"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+      </ul>
+    </nav>
+
+    <!-- Screens Container -->
+    <div id="screens-container">
+      <!-- Login Screen -->
+      <section id="login-screen" class="screen active fade-in" aria-label="Login Screen">
+        <h2>Login to Motion Mind</h2>
+        <form id="loginForm" class="form" aria-label="Login Form">
+          <input type="email" id="loginEmail" placeholder="Email" required aria-required="true" aria-label="Email" />
+          <input type="password" id="loginPassword" placeholder="Password" required aria-required="true" aria-label="Password" />
+          <button type="submit" class="btn primary-btn">Login</button>
+          <p>Don't have an account? <a href="#" id="toRegister" tabindex="0">Register here</a></p>
+        </form>
+      </section>
+
+      <!-- Register Screen -->
+      <section id="register-screen" class="screen fade-in" aria-label="Register Screen">
+        <h2>Create your Account</h2>
+        <form id="registerForm" class="form" aria-label="Registration Form">
+          <input type="email" id="registerEmail" placeholder="Email" required aria-required="true" aria-label="Email" />
+          <input type="password" id="registerPassword" placeholder="Password" required aria-required="true" aria-label="Password" />
+          <input type="password" id="registerConfirmPassword" placeholder="Confirm Password" required aria-required="true" aria-label="Confirm Password" />
+          <button type="submit" class="btn primary-btn">Register</button>
+          <p>Already have an account? <a href="#" id="toLogin" tabindex="0">Login here</a></p>
+        </form>
+      </section>
+
+      <!-- Dashboard -->
+      <section id="dashboard-screen" class="screen fade-in" aria-label="Dashboard">
+        <h2>Welcome, <span id="profileEmail">User</span></h2>
+        <div class="gesture-guide">
+          <h3>Gesture Guide:</h3>
+          <div class="gesture-list">
+            <div class="gesture-item">
+              <span class="gesture-name">One Finger Up</span>
+              <span class="gesture-action">Drawing</span>
+            </div>
+            <div class="gesture-item">
+              <span class="gesture-name">Two Fingers Up</span>
+              <span class="gesture-action">Erase</span>
+            </div>
+            <div class="gesture-item">
+              <span class="gesture-name">Three Fingers Up</span>
+              <span class="gesture-action">Color Change</span>
+            </div>
+            <div class="gesture-item">
+              <span class="gesture-name">Thumbs Up</span>
+              <span class="gesture-action">Select/Confirm</span>
+            </div>
+            <div class="gesture-item">
+              <span class="gesture-name">Fist</span>
+              <span class="gesture-action">Back/Cancel</span>
+            </div>
+            <div class="gesture-item">
+              <span class="gesture-name">Open Palm</span>
+              <span class="gesture-action">Clear/Reset</span>
+            </div>
+          </div>
+        </div>
+        <div class="webcam-container" aria-live="polite" aria-label="Webcam Feed">
+          <img id="webcam" src="" alt="Webcam Feed" />
+          <div class="webcam-loading" id="webcam-loading">
+            <i class="fas fa-video-slash"></i> Camera is off
+          </div>
+          <div class="webcam-controls">
+            <button id="start-camera-btn" class="btn small-btn" aria-label="Start Camera">
+              <i class="fas fa-video"></i> Start Camera
+            </button>
+            <button id="stop-camera-btn" class="btn small-btn" aria-label="Stop Camera" style="display:none;">
+              <i class="fas fa-video-slash"></i> Stop Camera
+            </button>
+            <button id="restart-camera-btn" class="btn small-btn" aria-label="Restart Camera" style="display:none;">
+              <i class="fas fa-sync-alt"></i> Restart Camera
+            </button>
+          </div>
+          <p class="webcam-instruction">Click "Start Camera" to begin gesture detection</p>
+        </div>
+        <div class="dashboard-buttons">
+          <button class="btn" data-screen="whiteboard" aria-label="Go to Whiteboard"><i class="fas fa-chalkboard"></i> Whiteboard</button>
+          <button class="btn" data-screen="games" aria-label="Go to Games"><i class="fas fa-gamepad"></i> Games</button>
+          <button class="btn" data-screen="presentation" aria-label="Go to Presentation"><i class="fas fa-file-powerpoint"></i> Presentation</button>
+        </div>
+      </section>
+
+      <!-- Whiteboard -->
+      <section id="whiteboard-screen" class="screen fade-in" aria-label="Whiteboard">
+        <div class="two-column-layout">
+          <div class="main-content">
+            <h2>Gesture Controlled Whiteboard</h2>
+            <div class="whiteboard-instructions">
+              <p>Use hand gestures to control the whiteboard:</p>
+              <ul>
+                <li><strong>One Finger Up (Index finger up):</strong> Draw on the canvas</li>
+                <li><strong>Two Fingers Up (Index and Middle):</strong> Erase</li>
+                <li><strong>Three Fingers Up (Index, middle, ring):</strong> Change color (move hand left/right to select color)</li>
+                <li><strong>Thumbs Up:</strong> Select/Confirm action</li>
+                <li><strong>Fist:</strong> Back/Cancel</li>
+                <li><strong>Open Palm:</strong> Clear/Reset canvas</li>
+              </ul>
+            </div>
+            <canvas id="whiteboard-canvas" width="800" height="500" aria-label="Whiteboard Canvas"></canvas>
+            <div class="whiteboard-controls">
+              <button class="btn" id="undoBtn" aria-label="Undo last action">Undo</button>
+              <button class="btn" id="clearBtn" aria-label="Clear whiteboard">Clear</button>
+              <input type="color" id="colorPicker" value="#00ff00" aria-label="Select drawing color" />
+            </div>
+            <button class="btn back-btn" data-screen="dashboard" aria-label="Back to Dashboard">Back to Dashboard</button>
+          </div>
+          <div class="side-panel">
+            <div class="mini-webcam-container">
+              <h3>Gesture Detection</h3>
+              <div class="webcam-wrapper">
+                <img id="mini-webcam" src="" alt="Gesture Detection Feed" />
+                <div class="webcam-loading" id="webcam-loading">
+                  <i class="fas fa-video-slash"></i> Camera is off
+                </div>
+              </div>
+              <div class="webcam-controls">
+                <button id="start-mini-camera-btn" class="btn small-btn" aria-label="Start Camera">
+                  <i class="fas fa-video"></i> Start Camera
+                </button>
+                <button id="stop-mini-camera-btn" class="btn small-btn" aria-label="Stop Camera" style="display:none;">
+                  <i class="fas fa-video-slash"></i> Stop Camera
+                </button>
+              </div>
+              <div id="gesture-status" class="gesture-status">
+                <p>Current Gesture: <span id="current-gesture">None</span></p>
+                <div class="gesture-indicator">
+                  <div class="gesture-dot" id="gesture-dot"></div>
+                  <span id="gesture-feedback">Waiting for gesture...</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Games -->
+      <section id="games-screen" class="screen fade-in" aria-label="Games">
+        <div class="two-column-layout">
+          <div class="main-content">
+            <h2>Gesture-Based Games</h2>
+            
+            <!-- Rock Paper Scissors Game -->
+            <div id="rps-game" class="game-container hidden">
+              <h3>Rock Paper Scissors</h3>
+              <div class="game-instructions">
+                <p>Use gestures to play:</p>
+                <ul>
+                  <li><strong>Fist:</strong> Rock</li>
+                  <li><strong>Open Palm:</strong> Paper</li>
+                  <li><strong>Two Fingers Up:</strong> Scissors</li>
+                </ul>
+              </div>
+              <div class="game-display">
+                <div class="player-choice">
+                  <h4>Your Choice</h4>
+                  <div id="player-gesture" class="gesture-display">?</div>
+                </div>
+                <div class="vs">VS</div>
+                <div class="computer-choice">
+                  <h4>Computer Choice</h4>
+                  <div id="computer-gesture" class="gesture-display">?</div>
+                </div>
+              </div>
+              <div id="game-result" class="game-result">Make a gesture to play!</div>
+              <div class="score-display">
+                <span>Player: <span id="player-score">0</span></span>
+                <span>Computer: <span id="computer-score">0</span></span>
+              </div>
+              <button class="btn back-btn" data-screen="dashboard" aria-label="Back to Dashboard">Back to Dashboard</button>
+            </div>
+            
+            <!-- Gesture Basketball Game -->
+            <div id="basketball-game" class="game-container hidden">
+              <h3>Gesture Basketball</h3>
+              <div class="game-instructions">
+                <p>Use gestures to play:</p>
+                <ul>
+                  <li><strong>One Finger Up:</strong> Aim</li>
+                  <li><strong>Thumbs Up:</strong> Shoot</li>
+                </ul>
+              </div>
+              <div class="basketball-court">
+                <div id="ball" class="ball"></div>
+                <div id="hoop" class="hoop"></div>
+                <div id="score" class="basketball-score">Score: 0</div>
+              </div>
+              <button class="btn back-btn" data-screen="dashboard" aria-label="Back to Dashboard">Back to Dashboard</button>
+            </div>
+            
+            <!-- Magic Spells Game -->
+            <div id="spells-game" class="game-container hidden">
+              <h3>Magic Spells</h3>
+              <div class="game-instructions">
+                <p>Cast spells with gestures:</p>
+                <ul>
+                  <li><strong>Three Fingers Up:</strong> Fire Spell</li>
+                  <li><strong>Open Palm:</strong> Ice Spell</li>
+                  <li><strong>One Finger Up:</strong> Lightning Spell</li>
+                </ul>
+              </div>
+              <div class="spell-area">
+                <div id="spell-cast" class="spell-display"></div>
+                <div id="spell-target" class="spell-target"></div>
+              </div>
+              <div id="spell-score" class="spell-score">Spells Cast: 0</div>
+              <button class="btn back-btn" data-screen="dashboard" aria-label="Back to Dashboard">Back to Dashboard</button>
+            </div>
+            
+            <div class="games-list">
+              <div class="game-card" tabindex="0" data-game="rps">
+                <i class="fas fa-hand-rock fa-4x"></i>
+                <h3>Rock-Paper-Scissors</h3>
+                <p>Challenge the AI with gesture-based rock-paper-scissors.</p>
+                <button class="btn play-btn" aria-label="Play Rock Paper Scissors">Play Now</button>
+              </div>
+              <div class="game-card" tabindex="0" data-game="basketball">
+                <i class="fas fa-basketball-ball fa-4x"></i>
+                <h3>Gesture Basketball</h3>
+                <p>Shoot hoops using hand gestures with real-time tracking.</p>
+                <button class="btn play-btn" aria-label="Play Gesture Basketball">Play Now</button>
+              </div>
+              <div class="game-card" tabindex="0" data-game="spells">
+                <i class="fas fa-magic fa-4x"></i>
+                <h3>Magic Spells</h3>
+                <p>Cast spells with specific gestures in this interactive game.</p>
+                <button class="btn play-btn" aria-label="Play Magic Spells">Play Now</button>
+              </div>
+            </div>
+            <button class="btn back-btn" data-screen="dashboard" aria-label="Back to Dashboard">Back to Dashboard</button>
+          </div>
+          <div class="side-panel">
+            <div class="mini-webcam-container">
+              <h3>Gesture Detection</h3>
+              <div class="webcam-wrapper">
+                <img id="mini-webcam" src="" alt="Gesture Detection Feed" />
+                <div class="webcam-loading" id="webcam-loading">
+                  <i class="fas fa-video-slash"></i> Camera is off
+                </div>
+              </div>
+              <div class="webcam-controls">
+                <button id="start-games-camera-btn" class="btn small-btn" aria-label="Start Camera">
+                  <i class="fas fa-video"></i> Start Camera
+                </button>
+                <button id="stop-games-camera-btn" class="btn small-btn" aria-label="Stop Camera" style="display:none;">
+                  <i class="fas fa-video-slash"></i> Stop Camera
+                </button>
+              </div>
+              <div id="gesture-status" class="gesture-status">
+                <p>Current Gesture: <span id="current-gesture">None</span></p>
+                <div class="gesture-indicator">
+                  <div class="gesture-dot" id="gesture-dot"></div>
+                  <span id="gesture-feedback">Waiting for gesture...</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Presentation -->
+      <section id="presentation-screen" class="screen fade-in" aria-label="Presentation Control">
+        <div class="two-column-layout">
+          <div class="main-content">
+            <h2>Presentation Control</h2>
+            <p>Use your gestures to control slides effortlessly.</p>
+            <div class="game-instructions">
+              <p>Use gestures to control:</p>
+              <ul>
+                <li><strong>One Finger Up:</strong> Next Slide</li>
+                <li><strong>Fist:</strong> Previous Slide</li>
+                <li><strong>Open Palm:</strong> Start/Stop Presentation</li>
+              </ul>
+            </div>
+            
+            <!-- Alternative Presentation Viewer -->
+            <div class="presentation-controls">
+              <div class="slide-navigation">
+                <button class="btn" id="prev-slide-btn" aria-label="Previous Slide">
+                  <i class="fas fa-arrow-left"></i> Previous
+                </button>
+                <span class="slide-counter">Slide <span id="current-slide">1</span> of <span id="total-slides">5</span></span>
+                <button class="btn" id="next-slide-btn" aria-label="Next Slide">
+                  Next <i class="fas fa-arrow-right"></i>
+                </button>
+              </div>
+              
+              <div class="slide-content" id="slide-content">
+                <div class="slide active" data-slide="1">
+                  <h3>Slide 1: Introduction</h3>
+                  <p>Welcome to Motion Mind Gesture Control Presentation</p>
+                  <p>Use hand gestures to navigate through slides</p>
+                </div>
+                
+                <div class="slide" data-slide="2">
+                  <h3>Slide 2: Features</h3>
+                  <ul>
+                    <li>Hand gesture recognition</li>
+                    <li>Real-time control</li>
+                    <li>Interactive interface</li>
+                  </ul>
+                </div>
+                
+                <div class="slide" data-slide="3">
+                  <h3>Slide 3: How It Works</h3>
+                  <p>MediaPipe detects hand landmarks</p>
+                  <p>Flask processes the gestures</p>
+                  <p>Frontend responds to actions</p>
+                </div>
+                
+                <div class="slide" data-slide="4">
+                  <h3>Slide 4: Applications</h3>
+                  <ul>
+                    <li>Education</li>
+                    <li>Presentation</li>
+                    <li>Gaming</li>
+                    <li>Accessibility</li>
+                  </ul>
+                </div>
+                
+                <div class="slide" data-slide="5">
+                  <h3>Slide 5: Thank You</h3>
+                  <p>Questions?</p>
+                  <p>Contact: motionmind@example.com</p>
+                </div>
+              </div>
+              
+              <div class="presentation-status">
+                <p>Status: <span id="presentation-status">Ready</span></p>
+                <p>Last Action: <span id="last-action">None</span></p>
+              </div>
+            </div>
+            
+            <button class="btn back-btn" data-screen="dashboard" aria-label="Back to Dashboard">Back to Dashboard</button>
+          </div>
+          <div class="side-panel">
+            <div class="mini-webcam-container">
+              <h3>Gesture Detection</h3>
+              <div class="webcam-wrapper">
+                <img id="mini-webcam" src="" alt="Gesture Detection Feed" />
+                <div class="webcam-loading" id="webcam-loading">
+                  <i class="fas fa-video-slash"></i> Camera is off
+                </div>
+              </div>
+              <div class="webcam-controls">
+                <button id="start-presentation-camera-btn" class="btn small-btn" aria-label="Start Camera">
+                  <i class="fas fa-video"></i> Start Camera
+                </button>
+                <button id="stop-presentation-camera-btn" class="btn small-btn" aria-label="Stop Camera" style="display:none;">
+                  <i class="fas fa-video-slash"></i> Stop Camera
+                </button>
+              </div>
+              <div id="gesture-status" class="gesture-status">
+                <p>Current Gesture: <span id="current-gesture">None</span></p>
+                <div class="gesture-indicator">
+                  <div class="gesture-dot" id="gesture-dot"></div>
+                  <span id="gesture-feedback">Waiting for gesture...</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Settings -->
+      <section id="settings-screen" class="screen fade-in" aria-label="Settings">
+        <h2>Settings</h2>
+        <form class="form" aria-label="Settings Form" id="settingsForm">
+          <label for="gestureSensitivity">Gesture Sensitivity:</label>
+          <input type="range" id="gestureSensitivity" min="1" max="10" value="5" aria-valuemin="1" aria-valuemax="10" aria-valuenow="5" />
+          <label for="themeSelect">Theme:</label>
+          <select id="themeSelect" aria-label="Theme selection">
+            <option value="light">Light</option>
+            <option value="dark" selected>Dark</option>
+          </select>
+          <button class="btn primary-btn" id="saveSettingsBtn" type="submit">Save Settings</button>
+        </form>
+        <button class="btn back-btn" data-screen="dashboard" aria-label="Back to Dashboard">Back to Dashboard</button>
+      </section>
+
+      <!-- Profile -->
+      <section id="profile-screen" class="screen fade-in" aria-label="User Profile">
+        <h2>User Profile</h2>
+        <p>Email: <span id="profileEmailDisplay">user@example.com</span></p>
+        <button class="btn back-btn" data-screen="dashboard" aria-label="Back to Dashboard">Back to Dashboard</button>
+      </section>
+
+      <!-- Help -->
+      <section id="help-screen" class="screen fade-in" aria-label="Help and Support">
+        <h2>Help & Support</h2>
+        <h3>Gesture Guide</h3>
+        <div class="gesture-guide-help">
+          <div class="gesture-item-help">
+            <h4>One Finger Up (Index finger up)</h4>
+            <p>Use for drawing, aiming in basketball, casting lightning spells, and next slide in presentation.</p>
+          </div>
+          <div class="gesture-item-help">
+            <h4>Two Fingers Up (Index and Middle)</h4>
+            <p>Use for erasing and playing scissors in rock-paper-scissors.</p>
+          </div>
+          <div class="gesture-item-help">
+            <h4>Three Fingers Up (Index, middle, ring)</h4>
+            <p>Use for changing colors and casting fire spells.</p>
+          </div>
+          <div class="gesture-item-help">
+            <h4>Thumbs Up</h4>
+            <p>Use for selecting, confirming, and shooting in basketball.</p>
+          </div>
+          <div class="gesture-item-help">
+            <h4>Fist</h4>
+            <p>Use for back/cancel, playing rock in games, and previous slide in presentation.</p>
+          </div>
+          <div class="gesture-item-help">
+            <h4>Open Palm</h4>
+            <p>Use for clearing/reset, playing paper in games, and casting ice spells.</p>
+          </div>
+        </div>
+        <h3>FAQs</h3>
+        <ul>
+          <li><b>Q:</b> How do I use gesture control?<br /><b>A:</b> Click "Start Camera" and follow on-screen instructions.</li>
+          <li><b>Q:</b> Which browsers are supported?<br /><b>A:</b> Latest Chrome, Firefox, Edge.</li>
+          <li><b>Q:</b> Can I customize gestures?<br /><b>A:</b> Settings page allows gesture sensitivity adjustment.</li>
+        </ul>
+        <button class="btn back-btn" data-screen="dashboard" aria-label="Back to Dashboard">Back to Dashboard</button>
+      </section>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
